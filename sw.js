@@ -1,4 +1,4 @@
-const CACHE_NAME = "daniel-nagorka-static-html-v10";
+const CACHE_NAME = "daniel-nagorka-static-html-v12";
 const BASE_PATH = new URL("./", self.location.href).pathname.replace(/\/$/, "");
 const withBasePath = function (path) {
   return BASE_PATH + path;
@@ -18,9 +18,9 @@ const STATIC_ASSETS = [
   withBasePath("/uk/index.html"),
   withBasePath("/uk/galleries/index.html"),
   OFFLINE_URL,
-  withBasePath("/assets/styles.css?v=20260718-i18n"),
-  withBasePath("/assets/config.js?v=20260718-i18n"),
-  withBasePath("/assets/app.js?v=20260718-i18n"),
+  withBasePath("/assets/styles.css?v=20260718-layout2"),
+  withBasePath("/assets/config.js?v=20260718-contact"),
+  withBasePath("/assets/app.js?v=20260718-contact"),
   withBasePath("/assets/brand/logo.jpg"),
   withBasePath("/assets/icons/icon-192.png"),
   withBasePath("/assets/icons/icon-512.png"),

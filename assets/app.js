@@ -58,6 +58,7 @@
 
   function hydrateCompanyData() {
     setText("[data-company='contactPerson']", company.contactPerson || "");
+    setText("[data-company='nip']", company.nip || "");
     setText("[data-company='phoneDisplay']", company.phoneDisplay || "");
     setText("[data-company='email']", company.email || "");
     setText(
