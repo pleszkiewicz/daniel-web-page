@@ -12,8 +12,6 @@
       previous: "Poprzednie zdjęcie",
       next: "Następne zdjęcie",
       photoPreview: "Otwórz zdjęcie",
-      galleryNotFoundTitle: "Nie znaleziono galerii",
-      galleryNotFoundText: "Wróć do listy kategorii i wybierz dostępną galerię.",
     },
     en: {
       menuOpen: "Open menu",
@@ -23,8 +21,6 @@
       previous: "Previous image",
       next: "Next image",
       photoPreview: "Open photo",
-      galleryNotFoundTitle: "Gallery not found",
-      galleryNotFoundText: "Go back to the category list and choose an available gallery.",
     },
     de: {
       menuOpen: "Menü öffnen",
@@ -34,8 +30,6 @@
       previous: "Vorheriges Bild",
       next: "Nächstes Bild",
       photoPreview: "Foto öffnen",
-      galleryNotFoundTitle: "Galerie nicht gefunden",
-      galleryNotFoundText: "Gehen Sie zurück zur Kategorienliste und wählen Sie eine verfügbare Galerie.",
     },
     uk: {
       menuOpen: "Відкрити меню",
@@ -45,8 +39,6 @@
       previous: "Попереднє фото",
       next: "Наступне фото",
       photoPreview: "Відкрити фото",
-      galleryNotFoundTitle: "Галерею не знайдено",
-      galleryNotFoundText: "Поверніться до списку категорій і виберіть доступну галерею.",
     },
   };
 
@@ -276,20 +268,6 @@
       });
     }
 
-    function showEmptyGallery() {
-      var empty = document.querySelector("[data-gallery-empty]");
-      var title = document.querySelector("[data-gallery-empty-title]");
-      var text = document.querySelector("[data-gallery-empty-text]");
-      var categoryTitle = document.querySelector("[data-gallery-category-title]");
-      var photosRoot = document.querySelector("[data-gallery-photos]");
-
-      if (categoryTitle) categoryTitle.textContent = copy.galleryNotFoundTitle;
-      if (photosRoot) photosRoot.innerHTML = "";
-      if (title) title.textContent = copy.galleryNotFoundTitle;
-      if (text) text.textContent = copy.galleryNotFoundText;
-      if (empty) empty.hidden = false;
-    }
-
     function setupGalleryIndex() {
       if (!groupsRoot) return;
 
@@ -337,19 +315,17 @@
       var group = findGalleryBySlug(slug);
       var categoryTitle = document.querySelector("[data-gallery-category-title]");
       var photosRoot = document.querySelector("[data-gallery-photos]");
-      var empty = document.querySelector("[data-gallery-empty]");
 
       updateLanguageLinks(slug);
 
       if (!group || !categoryTitle || !photosRoot) {
-        showEmptyGallery();
+        if (photosRoot) photosRoot.innerHTML = "";
         return;
       }
 
       categoryTitle.textContent = group.title;
       renderGalleryPhotos(group, photosRoot);
       updateCategoryPageTitle(group);
-      if (empty) empty.hidden = true;
     }
 
     setupGalleryIndex();

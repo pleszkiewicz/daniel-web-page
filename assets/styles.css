@@ -1050,35 +1050,6 @@ body.menu-open .site-header {
   transform: scale(1.04);
 }
 
-.empty-gallery {
-  display: grid;
-  gap: 0.75rem;
-  border: var(--border-technical);
-  border-radius: var(--radius-panel);
-  background:
-    linear-gradient(135deg, rgb(255 255 255 / 7%), transparent 34%),
-    linear-gradient(180deg, rgb(20 23 28 / 96%), rgb(8 10 12 / 96%));
-  padding: 1.5rem;
-  text-align: center;
-  box-shadow: var(--shadow-panel);
-}
-
-.empty-gallery strong {
-  color: white;
-  font-family: var(--font-heading);
-  font-size: 2rem;
-  text-transform: uppercase;
-}
-
-.empty-gallery span {
-  color: var(--color-muted);
-  line-height: 1.6;
-}
-
-.gallery-empty-panel {
-  margin-top: 2rem;
-}
-
 .lightbox[hidden] {
   display: none;
 }
