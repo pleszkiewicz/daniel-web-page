@@ -12,6 +12,8 @@
       previous: "Poprzednie zdjęcie",
       next: "Następne zdjęcie",
       photoPreview: "Otwórz zdjęcie",
+      galleryNotFoundTitle: "Nie znaleziono galerii",
+      galleryNotFoundText: "Wróć do listy kategorii i wybierz dostępną galerię.",
     },
     en: {
       menuOpen: "Open menu",
@@ -21,6 +23,8 @@
       previous: "Previous image",
       next: "Next image",
       photoPreview: "Open photo",
+      galleryNotFoundTitle: "Gallery not found",
+      galleryNotFoundText: "Go back to the category list and choose an available gallery.",
     },
     de: {
       menuOpen: "Menü öffnen",
@@ -30,6 +34,8 @@
       previous: "Vorheriges Bild",
       next: "Nächstes Bild",
       photoPreview: "Foto öffnen",
+      galleryNotFoundTitle: "Galerie nicht gefunden",
+      galleryNotFoundText: "Gehen Sie zurück zur Kategorienliste und wählen Sie eine verfügbare Galerie.",
     },
     uk: {
       menuOpen: "Відкрити меню",
@@ -39,6 +45,8 @@
       previous: "Попереднє фото",
       next: "Наступне фото",
       photoPreview: "Відкрити фото",
+      galleryNotFoundTitle: "Галерею не знайдено",
+      galleryNotFoundText: "Поверніться до списку категорій і виберіть доступну галерею.",
     },
   };
 
@@ -172,16 +180,13 @@
 
   function setupGalleryGroups() {
     var groupsRoot = document.querySelector("[data-gallery-groups]");
+    var categoryRoot = document.querySelector("[data-gallery-category]");
     var lightbox = document.querySelector("[data-lightbox]");
-    if (!groupsRoot || !lightbox) return;
+    if (!lightbox) return;
 
     var groups = (config.galleryGroups && config.galleryGroups[locale]) || [];
     var activeImages = [];
     var activeIndex = 0;
-    var detail = document.querySelector("[data-gallery-detail]");
-    var detailTitle = document.querySelector("[data-gallery-detail-title]");
-    var photosRoot = document.querySelector("[data-gallery-photos]");
-    var backButton = document.querySelector("[data-gallery-back]");
     var lightboxImage = lightbox.querySelector("[data-lightbox-image]");
     var lightboxCaption = lightbox.querySelector("[data-lightbox-caption]");
     var closeButton = lightbox.querySelector("[data-lightbox-close]");
@@ -216,19 +221,37 @@
       );
     }
 
-    function showCategories() {
-      groupsRoot.hidden = false;
-      if (detail) detail.hidden = true;
-      if (photosRoot) photosRoot.innerHTML = "";
-      groupsRoot.scrollIntoView({ block: "start", behavior: "smooth" });
+    function findGalleryBySlug(slug) {
+      return groups.find(function (group) {
+        return group.slug === slug;
+      });
     }
 
-    function showGallery(group) {
-      if (!detail || !detailTitle || !photosRoot) return;
+    function getRequestedGallerySlug() {
+      return new URLSearchParams(window.location.search).get("slug") || "";
+    }
 
-      groupsRoot.hidden = true;
-      detail.hidden = false;
-      detailTitle.textContent = group.title;
+    function buildCategoryHref(group) {
+      return "category/index.html?slug=" + encodeURIComponent(group.slug);
+    }
+
+    function updateLanguageLinks(slug) {
+      document.querySelectorAll("[data-gallery-language-link]").forEach(function (link) {
+        var baseHref = link.getAttribute("data-gallery-language-link");
+        if (!baseHref) return;
+        link.setAttribute(
+          "href",
+          slug ? baseHref + "?slug=" + encodeURIComponent(slug) : baseHref,
+        );
+      });
+    }
+
+    function updateCategoryPageTitle(group) {
+      var titleSuffix = document.body.getAttribute("data-gallery-page-title-suffix");
+      if (titleSuffix) document.title = group.title + " | " + titleSuffix;
+    }
+
+    function renderGalleryPhotos(group, photosRoot) {
       photosRoot.innerHTML = "";
 
       group.images.forEach(function (image, index) {
@@ -251,50 +274,86 @@
         });
         photosRoot.appendChild(button);
       });
-
-      detail.scrollIntoView({ block: "start", behavior: "smooth" });
     }
 
-    groupsRoot.innerHTML = "";
+    function showEmptyGallery() {
+      var empty = document.querySelector("[data-gallery-empty]");
+      var title = document.querySelector("[data-gallery-empty-title]");
+      var text = document.querySelector("[data-gallery-empty-text]");
+      var categoryTitle = document.querySelector("[data-gallery-category-title]");
+      var photosRoot = document.querySelector("[data-gallery-photos]");
 
-    groups.forEach(function (group) {
-      if (!group.images || !group.images.length) return;
+      if (categoryTitle) categoryTitle.textContent = copy.galleryNotFoundTitle;
+      if (photosRoot) photosRoot.innerHTML = "";
+      if (title) title.textContent = copy.galleryNotFoundTitle;
+      if (text) text.textContent = copy.galleryNotFoundText;
+      if (empty) empty.hidden = false;
+    }
 
-      var button = document.createElement("button");
-      var preview = document.createElement("span");
-      var meta = document.createElement("span");
-      var title = document.createElement("span");
-      var count = document.createElement("span");
+    function setupGalleryIndex() {
+      if (!groupsRoot) return;
 
-      button.className = "gallery-group-card";
-      button.type = "button";
-      button.setAttribute("aria-label", copy.openGallery + ": " + group.title);
+      groupsRoot.innerHTML = "";
 
-      preview.className = "gallery-card-preview";
-      preview.setAttribute("aria-hidden", "true");
+      groups.forEach(function (group) {
+        if (!group.images || !group.images.length) return;
 
-      group.images.slice(0, 4).forEach(function (image) {
-        preview.appendChild(createPreviewImage(image));
+        var link = document.createElement("a");
+        var preview = document.createElement("span");
+        var meta = document.createElement("span");
+        var title = document.createElement("span");
+        var count = document.createElement("span");
+
+        link.className = "gallery-group-card";
+        link.setAttribute("href", buildCategoryHref(group));
+        link.setAttribute("aria-label", copy.openGallery + ": " + group.title);
+
+        preview.className = "gallery-card-preview";
+        preview.setAttribute("aria-hidden", "true");
+
+        group.images.slice(0, 4).forEach(function (image) {
+          preview.appendChild(createPreviewImage(image));
+        });
+
+        meta.className = "gallery-card-meta";
+        title.className = "gallery-card-title";
+        title.textContent = group.title;
+        count.className = "gallery-card-count";
+        count.textContent = formatPhotoCount(group.images.length);
+
+        meta.appendChild(title);
+        meta.appendChild(count);
+        link.appendChild(preview);
+        link.appendChild(meta);
+
+        groupsRoot.appendChild(link);
       });
+    }
 
-      meta.className = "gallery-card-meta";
-      title.className = "gallery-card-title";
-      title.textContent = group.title;
-      count.className = "gallery-card-count";
-      count.textContent = formatPhotoCount(group.images.length);
+    function setupGalleryCategory() {
+      if (!categoryRoot) return;
 
-      meta.appendChild(title);
-      meta.appendChild(count);
-      button.appendChild(preview);
-      button.appendChild(meta);
-      button.addEventListener("click", function () {
-        showGallery(group);
-      });
+      var slug = getRequestedGallerySlug();
+      var group = findGalleryBySlug(slug);
+      var categoryTitle = document.querySelector("[data-gallery-category-title]");
+      var photosRoot = document.querySelector("[data-gallery-photos]");
+      var empty = document.querySelector("[data-gallery-empty]");
 
-      groupsRoot.appendChild(button);
-    });
+      updateLanguageLinks(slug);
 
-    if (backButton) backButton.addEventListener("click", showCategories);
+      if (!group || !categoryTitle || !photosRoot) {
+        showEmptyGallery();
+        return;
+      }
+
+      categoryTitle.textContent = group.title;
+      renderGalleryPhotos(group, photosRoot);
+      updateCategoryPageTitle(group);
+      if (empty) empty.hidden = true;
+    }
+
+    setupGalleryIndex();
+    setupGalleryCategory();
 
     if (closeButton) closeButton.addEventListener("click", closeLightbox);
     if (prevButton) {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "daniel-nagorka-static-html-v12";
+const CACHE_NAME = "daniel-nagorka-static-html-v13";
 const BASE_PATH = new URL("./", self.location.href).pathname.replace(/\/$/, "");
 const withBasePath = function (path) {
   return BASE_PATH + path;
@@ -8,19 +8,25 @@ const STATIC_ASSETS = [
   withBasePath("/"),
   withBasePath("/index.html"),
   withBasePath("/galleries/index.html"),
+  withBasePath("/galleries/category/index.html"),
   withBasePath("/en/"),
   withBasePath("/en/index.html"),
   withBasePath("/en/galleries/index.html"),
+  withBasePath("/en/galleries/category/index.html"),
   withBasePath("/de/"),
   withBasePath("/de/index.html"),
   withBasePath("/de/galleries/index.html"),
+  withBasePath("/de/galleries/category/index.html"),
   withBasePath("/uk/"),
   withBasePath("/uk/index.html"),
   withBasePath("/uk/galleries/index.html"),
+  withBasePath("/uk/galleries/category/index.html"),
   OFFLINE_URL,
   withBasePath("/assets/styles.css?v=20260718-layout2"),
+  withBasePath("/assets/styles.css?v=20260718-gallery-template"),
   withBasePath("/assets/config.js?v=20260718-contact"),
   withBasePath("/assets/app.js?v=20260718-contact"),
+  withBasePath("/assets/app.js?v=20260718-gallery-template"),
   withBasePath("/assets/brand/logo.jpg"),
   withBasePath("/assets/icons/icon-192.png"),
   withBasePath("/assets/icons/icon-512.png"),

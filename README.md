@@ -92,6 +92,8 @@ Następnie:
 2. Uzupełnij tablicę `galleryGroupData` w `assets/config.js`.
 3. W polu `slug` podaj nazwę katalogu, a w `title.pl`, `title.en`, `title.de` i `title.uk` widoczne nazwy galerii.
 
+Nie trzeba tworzyć osobnej podstrony HTML dla nowej kategorii. Lista kategorii linkuje do szablonu `galleries/category/index.html?slug=...`, który na podstawie `slug` pobiera nazwę i zdjęcia z `assets/config.js`.
+
 Przykład:
 
 ```js

@@ -888,8 +888,10 @@ body.menu-open .site-header {
     linear-gradient(180deg, rgb(20 23 28 / 92%), rgb(8 10 12 / 96%));
   color: inherit;
   cursor: pointer;
+  font: inherit;
   padding: 1rem;
   text-align: left;
+  text-decoration: none;
   box-shadow: var(--shadow-panel);
   transition:
     transform var(--transition-medium),
@@ -1010,10 +1012,6 @@ body.menu-open .site-header {
   letter-spacing: 0;
   line-height: 0.95;
   text-transform: uppercase;
-}
-
-.gallery-back-button {
-  width: fit-content;
 }
 
 .gallery-photo-grid {
