@@ -1,4 +1,4 @@
-const CACHE_NAME = "daniel-nagorka-static-html-v14";
+const CACHE_NAME = "daniel-nagorka-static-html-v15";
 const BASE_PATH = new URL("./", self.location.href).pathname.replace(/\/$/, "");
 const withBasePath = function (path) {
   return BASE_PATH + path;
